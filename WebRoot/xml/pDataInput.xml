@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TMasterDetail" permissions="add;update;delete;print;filter">
+   <title>数据编辑</title>
+   <table name="emdata" title="客户" keyfield="categoryid/指标编码"   />
+   <tree title="指标分类" size="350,520" align="left" datafields="[180]categoryid/指标编码;[340]categoryname/指标名称" >
+      <sql>
+        select categoryid+' '+categoryname as nodetext,categoryid as cid,* from categories
+      </sql>
+   </tree>	
+   <grid title="指标列表" size="350,0" pagesize="20" style="single" >
+      <sql>
+        select * from categories
+      </sql>
+      <datafields>
+        [50]sysrowno/序号;[80]categoryid/类别编码;[200]categoryname/类别名称
+      </datafields>
+      <filterfields>
+        categoryid/类别编码;categoryname/类别名称
+      </filterfields>
+   </grid>
+   <form title="指标信息" size="244,632" rowheight="32" >
+      <tab title="指标设置" >  
+         <groupbox title="" pos="8,12" size="225,560" >
+            <textfield name="categoryid" label="指标编码：" labelwidth="60" pos="10+36*0,6" size="0,180" length="15" blanktext="请输入指标编码" />
+            <textfield name="categoryname" label="指标名称：" labelwidth="60" pos="10+36*1,6" size="0,522" length="100" blanktext="请输入指标名称" />
+            <combo name="type" label="指标类别：" labelwidth="60" pos="10+36*2,6" size="0,180" items="年度;季度;月度"/>
+            <datefield name="xdate1" label="样本区间：" labelwidth="60" pos="10+36*2,206" size="0,180" decimal="0" />
+            <datefield name="xdate2" label="~" labelwidth="12" pos="10+36*2,395" size="0,132" decimal="0" />
+            <memofield  name="notes" label="备注信息：" labelwidth="60" pos="10+36*3,6" size="90,522" />
+
+         </groupbox>
+      </tab>  
+   </form>
+
+   <detailgrid size="250,0" title="年度数据" table="emdata" pagesize="20" keyfield="sysid" sortfield="xyear" masterfield="categoryid" style="editable" titlefont="黑体"> 
+      <sql> select * from emdata  </sql>
+      <datafields>
+	[40]sysrowno/序号;[@c][80]xyear/日期;[#n16,4][@r]xvalue/指标值
+      </datafields>
+   </detailgrid>
+</service>

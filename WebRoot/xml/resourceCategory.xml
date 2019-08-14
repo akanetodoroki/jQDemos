@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="MTreeGrid">
+  <title>资源分类</title>
+  <treegrid table="resourcecategories" keyfield="categoryid/资源分类编码" datafields="[16]categoryid/资源类别编码;[30]categoryname/资源类别名称;[30]englishname/英文名称;[40]description/类别描述,level,isparentflag,parentnodeid" 
+   sql="select CategoryID,CategoryName,Englishname,Cast(Description as varchar(1000)) as Description,ParentNodeID,IsparentFlag,Level from ResourceCategories" 
+   size="0,32"     />
+  <page  title="ttt" size="9,74" />
+  <panel title="基本信息"   pos="0.25,1.25"  size="8.25,72"  page="1" labelwidth="9"/>
+
+  <keyfield   name="categoryid"     label="类别编码："  panel="1"  pos="0.25, 0" size="0,21" maxlength="16" />
+  <textfield  name="categoryname"   label="类别名称："  panel="1"  pos="1.25, 0" size="0,60" maxlength="80" />
+  <textarea   name="description"    label="资源描述："  panel="1"  pos="2.25, 0" size="4,60" />
+  <validation>categoryid!=""</validation>
+  <validation>categoryname!=""</validation>
+</service>

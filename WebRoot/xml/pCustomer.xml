@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TMasterDetailGridForm" permissions="add;update;delete;print;filter">
+   <title>客户编辑</title>
+   <table name="customers" title="客户" keyfield="customerid/客户编码"   />
+   <tree title="客户分组" size="0,200" nodefields="province/所在省份;province+city/所在城市;type/客户类别;industry/所属行业;source/客户来源;status/客户状态" />
+   <grid title="客户列表" size="600,0" pagesize="20" style="single" lockedfields="customerid">
+      <sql>
+        select a.*,b.title,contactname,c.areaname as province,d.areaname as city,c.areaname+' '+d.areaname as provincecity,employeename from customers a 
+    	left join contacts b on a.customerid=b.customerid and a.contactid=b.contactid
+	    left join areas c on a.provinceid=c.areaid
+	    left join areas d on a.cityid=d.areaid
+	    left join employees e on a.employeeid=e.employeeid
+      </sql>
+      <datafields>
+       [50]sysrowno/序号;[80]customerid/客户编码;[200]customername/客户名称;[250]address/客户地址;[120][@c]province/所在省份;[140][@c]city/所在城市;[120][@c]contactname/主联系人;[120][@c]title/联系人职务;[100]zip/邮政编码;[150]phone/电话;[150]fax/传真;[@c][120]employeename/主管员工
+      </datafields>
+      <filterfields>
+        customerid/客户编码;customername/客户名称;address/客户地址;province/所在省份;city/所在城市;contactname/主联系人;
+      </filterfields>
+   </grid>
+   <form title="客户详情" size="300,610" rowheight="32" modal="xwindow">
+      <tab title="基本信息" >  
+         <groupbox title="基本信息" pos="06,10" size="248,577" labelwidth="60" >    
+            <textfield  name="customerid" label="客户编码：" labelwidth="60" pos="6,6" size="0,190" length="16" hint="请输入客户编码" />
+            <textfield  name="pycode" label="助记码：" labelwidth="60" pos="6,295" size="0,255" length="40" />
+            <textfield  name="customername" label="客户名称：" labelwidth="60" pos="6+32*1,6" size="0,544" length="80" hint="请输入客户名称" />
+            <combo  name="province" label="所属省份：" labelwidth="60" pos="6+32*2,6" size="0,250" sql="select areaid as provinceid,areaname as province from areas where level=1" valuefields="provinceid" />
+            <combo  name="city" label="所在城市：" labelwidth="60" pos="6+32*2,295" size="0,250" sql="select areaid as cityid,areaname as city,parentnodeid as provinceid from areas where level=2" valuefields="cityid" masterfield="provinceid" />
+            <textfield  name="address" label="详细地址：" labelwidth="60" pos="6+32*3,6" size="0,544" length="100" />
+            <textfield  name="zip" label="邮政编码：" labelwidth="60" pos="6+32*4,6" size="0,190" length="10" />
+            <textfield  name="phone" label="联系电话：" labelwidth="60" pos="6+32*4,295" size="0,255" length="24" />
+            <textfield  name="fax" label="传真号码：" labelwidth="60" pos="6+32*5,6" size="0,250" length="24" />
+            <textfield  name="email" label="电子邮件：" labelwidth="60" pos="6+32*5,295" size="0,255" length="50" />
+            <combo name="employeename" label="主管员工：" labelwidth="60" pos="6+32*6,6" size="0,250" sql="select employeeid,employeename from employees" valuefields="employeeid" />
+            <textfield  name="homepage" label="网站主页：" labelwidth="60" pos="6+32*6,295" size="0,255" length="50" />
+         </groupbox>
+      </tab>  
+      <tab title="辅助信息" >
+         <groupbox title="辅助信息" pos="06,10" size="248,577" >    
+            <combo  name="industry" label="所属行业：" labelwidth="60" pos="6+32*0,6" size="0,250" sql="select description as industry from dictionary where  type='所属行业'" />
+            <combo  name="type" label="客户类别：" labelwidth="60" pos="6+32*0,300" size="0,250" sql="select description as type from dictionary where type='客户类别'" />
+            <combo  name="source" label="客户来源：" labelwidth="60" pos="6+32*1,6" size="0,250" sql="select description as source from dictionary where type='客户来源'" />
+            <combo  name="status" label="客户状态：" labelwidth="60" pos="6+32*1,300" size="0,250" sql="select description as status from dictionary where type='客户状态'" />
+            <numberfield  name="revenue" label="年销售额：" labelwidth="60" pos="6+32*2,6" size="0,150" decimal="2" length="10" minvalue="0" />
+            <label name="revenuex" label="(万元)" pos="6+32*2+3,166" size="0,60" />
+            <numberfield  name="employees" label="员工人数：" labelwidth="60" pos="6+32*2,300" size="0,140" decimal="0" length="6" minvalue="0" />
+            <textfield  name="owner" label="法人代表：" labelwidth="60" pos="6+32*3,6" size="0,250" length="40" />
+            <textfield  name="stockno" label="股票代码：" labelwidth="60" pos="6+32*3,300" size="0,140" length="10" />
+            <memofield  name="notes" label="备注信息：" labelwidth="60" pos="6+32*4,6" size="85,544" length="500" />
+         </groupbox>
+      </tab>
+      <tab title="财务信息" >    
+         <groupbox  title="开户银行" tab="3" pos="6,10" size="58,577" >    
+            <textfield  name="bank" label="开户银行：" labelwidth="60" pos="6,6" size="0,250" length="50" />
+            <textfield  name="bankaccountno" label="银行账号：" labelwidth="60" pos="6,300" size="0,250" length="30" />
+         </groupbox>
+         <groupbox  title="开票信息" tab="3" pos="75,10" size="158,577" >    
+            <textfield  name="vatinvoicetitle" label="开票名称：" labelwidth="60" pos="10+32*0,6" size="0,544" length="80" />
+            <textfield  name="taxno" label="纳税人号：" labelwidth="60" pos="10+32*1,6" size="0,250" length="30" />
+            <textfield  name="vataccountphone" label="开户电话：" labelwidth="60" pos="10+32*1,300" size="0,250" length="30" />
+            <textfield  name="vataccountaddress" label="开户地址：" labelwidth="60" pos="10+32*2,6" size="0,544" length="80" />
+            <textfield  name="vatbank" label="开户银行：" labelwidth="60" pos="10+32*3,6" size="0,250" length="40" />
+            <textfield  name="vatbankaccountno" label="银行账号：" labelwidth="60" pos="10+32*3,300" size="0,250" length="40" />
+         </groupbox>
+      </tab>
+      <tab>
+        <title>附件信息</title>
+         <groupbox title="上传附件" pos="6,10" size="125,577" >
+            <fileupload  name="filepath" label="附件名称：" filename="filename" labelwidth="60" pos="10+32*0,6" size="10,544" />
+         </groupbox>
+      </tab>
+      <tab>
+          <title>状态信息</title>
+           <sysdate name="createdate" label="创建日期：" labelwidth="60" pos="10+32*0,16" size="0,180" value="default" />
+           <sysuser name="creator" label="创 建 人：" labelwidth="60" pos="10+32*0,310" size="0,240" value="default" />
+           <sysdate name="updatedate" label="修改日期：" labelwidth="60" pos="10+32*1,16" size="0,180" />
+           <sysuser name="operator" label="修 改 人：" labelwidth="60" pos="10+32*1,310" size="0,240" />
+      </tab>
+   </form>
+   <detailgrid size="250,0" title="联系人" table="contacts" pagesize="0" keyfield="contactid" masterfield="customerid" lockedfield="contactid">
+      <sql>select a.*,b.areaname as province,c.areaname as city from contacts a 
+           left join areas b on a.provinceid=b.areaid 
+           join areas c on a.cityid=c.areaid
+      </sql>
+      <datafields>
+		[50]sysrowno/序号;[120]contactid/联系人编码;[120]contactname/联系人姓名;[120]title/职务;[@c][50]gender/性别;[@c][72]birthdate/出生日期;[200]address/联系人地址;[100]province/所属省份;[100]city/所在城市;[60]zip/邮政编码;[120]homephone/家庭电话;[120]mobile/移动电话
+      </datafields>
+   </detailgrid>
+   <detailgrid title="活动" size="250,0" table="activities" keyfield="activityid" masterfield="customerid" lockedfield="activityid">
+      <sql>
+		select a.*,b.contactname,c.employeename from activities a
+		join contacts b on a.contactid=b.contactid 
+		join employees c on a.employeeid=c.employeeid
+      </sql>
+      <datafields>
+		[50]sysrowno/序号;[@c][72]createdate/创建日期;[200]activitytitle/活动主题;[140]activitytype/活动类型;[130]opportunity/相关机会;[@c][120]contactname/联系人;[@c][120]employeename/相关员工;[@c][110]startdatetime/开始时间;[@c][110]enddatetime/结束时间;[60]durationhours/持续时间
+	  </datafields>
+   </detailgrid>
+  <validation rule="customerid!=''" title="客户编码不能为空" />
+  <validation rule="customername!=''" title="客户名称不能为空" />
+  <validation rule="employees>=0" title="员工人数不能为负值" />
+  <replace>pycode=customerid</replace>
+  <replace>address=province+' '+city+' '+zip.substring(1,5)</replace>
+</service>

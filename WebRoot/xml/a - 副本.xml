@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type='TTreeGridItem'>
+  <title>资源分类</title>
+  <tree table="resourcecategories" datafields="categoryid;categoryname"
+   sql="select CategoryID,CategoryName,Englishname,Cast(Description as varchar(1000)) as Description,ParentNodeID,IsparentFlag,Level from ResourceCategories" 
+  />
+  <grid table="resources" keyfield="resourceid/资源编码" datafields="sysRowNumber;[100]resourceid/资源编码;[220]resourcename/资源名称;[150]categoryname/资源类别;
+   categoryid;courseid;[220]coursename/对应课程;[120]contributor/资源提供者;[100]uploadday/上传日期;osfilename;sourcefilename;size;[100]sizeinkb/资源大小;description" 
+   sql="select a.*,b.categoryname,c.coursename,convert(varchar(10),uploaddate,120) as uploadday from resources a join resourcecategories b 
+   on a.categoryid=b.categoryid join courses c on a.courseid=c.courseid"
+   filterfields="ResourceID/资源编码;ResourceName/资源名称;Categoryname/资源类别;Coursename/对应课程;Contributor/资源提供者;a.Description/资源描述"
+ />
+  <page  title='资源信息'   size='8,50'/>
+  <page  title='附件管理'   size='8,50'/>
+  <panel title='基本信息'   pos='0.25,1' size='14,65' page='1'/>
+  <panel title='附件信息'   pos='0.25,1' size='10,40' page='2'/>
+  <keyfield   name='resourceid'   label='资源编码:'  panel='1'  pos='1,2'/>
+  <treefield  name='resourcename'   label='资源名称:'  panel='1'  pos='2,2'/>
+  <combobox   name='categoryname'    label='资源类别:'  panel='1'  pos='3,2' table='resourcecategories' datafields='categoryid;categoryname'/>
+  <textfield  name='coursename'      label='对应课程:'  panel='1'  pos='4,2' table='courses' datafields='courses;courseid' />
+  <textarea   name='description'     label='资源描述:'  panel='1'  pos='5,2' size='500,120' />
+  <validation>resourceid!=''</validation>
+  <validation>resourcename!=''</validation>
+</service>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TTreeGridItem">
+  <title>教师分类</title>
+  <tree table="departments" size="0,30" keyfield="deptid" datafields="deptid,deptname"
+   sql="select deptid,deptname,Englishname,Leader,Cast(Description as varchar(1000)) as Description,ParentNodeID,IsparentFlag,Level from departments"    
+  />
+  <grid table="teachers" keyfield="teacherid/教师编码" datafields="[14]teacherid/教师编码;[16]name/教师姓名;[20]deptname/所属部门;deptid;[6]gender/性别;birthdate;[10]birthday/出生日期;Alias;IDNumber;[15]Title/职称;[15]Degree/最后学位;[35]Graduate/毕业学校;[11]graduateday/毕业时间;[20]major/所学专业;[11]hireday/进校时间;[10]party/党派;[12]hometown/籍贯;Nationality;WorkDate;Address;PostalCode;HomePhone;OfficePhone;OfficeNo;Mobile;Email;Homepage;
+   Institute;TurtorTitle;Research;Honor;Resume;Note;fileosname;filesourcename;filesize;filesizedesc" 
+   sql="select a.*,b.deptname,convert(varchar(10),birthdate,120) as birthday,convert(varchar(10),graduatedate,120) as graduateday,
+convert(varchar(10),hiredate,120) as hireday,convert(varchar(10),workdate,120) as workday
+   from teachers a join departments b on a.deptid=b.deptid"
+   filterfields="teacherID/教师编码;Name/教师姓名;deptname/所属部门;title/职称;address/家庭地址;homephone/家庭电话;mobile/移动电话;email/电子邮件;a.notes/备注信息"
+ />
+  <page  title="基本信息"   size="11.75,90" />
+  <page  title="其他信息"   size="11.75,90" />
+  <page  title="上传照片"   size="11.75,90" />
+  <panel title="基本信息"   pos="0.25, 1.25"  size="11,38"  page="1" labelwidth="9"/>
+  <panel title="通讯信息"   pos="0.25,41.25"  size="11,48"  page="1" labelwidth="9" />
+  <panel title="学术信息"   pos="0.25, 1.25"  size="11,45"  page="2" labelwidth="9" />
+  <panel title="个人简介"   pos="0.25,48.25"  size="11,41"  page="2" labelwidth="9" />
+  <panel title="照片信息"   pos="0.25, 1.25"  size="11,62"  page="3" labelwidth="9" />
+
+  <keyfield   name="teacherid"     label="教师编码："  panel="1"  pos="0.25, 0" size="0,16" maxlength="16" />
+  <textfield  name="name" 	   label="教师姓名："  panel="1"  pos="1.25, 0" size="0,20" maxlength="20" />
+  <textfield  name="alias"	   label="姓名拼音："  panel="1"  pos="2.25, 0" size="0,20" maxlength="50" />
+  <combobox   name="gender" 	   label="性别："      panel="1"  pos="3.25, 0" size="0, 6" items="男;女" value="男" />
+  <datefield  name="birthday"      label="出生日期："  panel="1"  pos="4.25, 0" size="0,10" aliasfields="birthdate" />
+  <textfield  name="idnumber"      label="身份证号："  panel="1"  pos="5.25, 0" size="0,20" maxlength="18" />
+  <textfield  name="hometown"      label="籍贯："      panel="1"  pos="6.25, 0" size="4,20" />
+  <textfield  name="nationality"   label="民族："      panel="1"  pos="7.25, 0" size="4,20" />
+  <combobox   name="party" 	   label="党派："      panel="1"  pos="8.25, 0" size="8,20" sql="select id,name as party from basicinfo where type='党派'" value="无"  />
+  <combobox   name="title" 	   label="职称："      panel="1"  pos="9.25, 0" size="8,20" sql="select id,name as title from basicinfo where type='职称'" value="副教授"  />
+
+  <combobox   name="deptname" 	   label="所在部门："  panel="2"  pos="0.25,0" size="8,25"  sql="select * from departments where isparentflag=0" table="departments" derivedfields="deptid"  />
+  <textfield  name="deptid"        label=""            panel="2"  pos="0.25,20" size="8,10" visible="false" />
+
+  <textfield  name="postalcode"    label="邮政编码："  panel="2"  pos="2.25, 0" size="0,10" maxlength="6" />
+  <textfield  name="homephone"     label="家庭电话："  panel="2"  pos="3.25, 0" size="0,20"  />
+  <textfield  name="mobile"        label="移动电话："  panel="2"  pos="4.25, 0" size="0,20"  />
+  <textfield  name="officephone"   label="办公电话："  panel="2"  pos="5.25, 0" size="0,20"  />
+  <textfield  name="fax"           label="传真号码："  panel="2"  pos="6.25, 0" size="0,20"  />
+  <textfield  name="email"         label="电子邮箱："  panel="2"  pos="7.25, 0" size="0,35"  />
+  <textfield  name="homepage"      label="个人主页："  panel="2"  pos="8.25, 0" size="0,35"  />
+  <textfield  name="officeno"      label="办公地点："  panel="2"  pos="9.25, 0" size="0,20"  />
+
+  <textfield  name="graduate"      label="毕业学校："    panel="3"  pos="0.25, 0" size="0,33"  maxlength="100"  />
+  <textfield  name="major"         label="毕业专业："    panel="3"  pos="1.25, 0" size="0,33"  />
+  <combobox   name="degree"        label="学历学位："    panel="3"  pos="2.25, 0" size="0,20"  sql="select id,name as degree from basicinfo where type='学历'" />
+  <datefield  name="graduateday"   label="毕业时间："    panel="3"  pos="3.25, 0" size="0,10"  format="Y-n" aliasfields="graduatedate"  hint="1990-1" />
+  <datefield  name="hireday"       label="进校时间："    panel="3"  pos="4.25, 0" size="0,10"  format="Y-n"   aliasfields="hiredate"     hint="1990-1" />
+  <datefield  name="workday"       label="工作时间："    panel="3"  pos="5.25, 0" size="0,10"  format="Y-n"   aliasfields="workdate"     hint="1990-1" />
+  <textfield  name="turtortitle"   label="导师信息："    panel="3"  pos="6.25, 0" size="0,33"  maxlength="50" />
+  <combobox   name="institute"     label="所在研究所："  panel="3"  pos="7.25, 0" size="0,31"  sql="select id,name as institute from basicinfo where type='研究所'" value="无"/>
+  <textarea   name="research"      label="研究领域："    panel="3"  pos="8.25, 0" size="2,33"  maxlength="250" />
+
+  <label  name="xresume"       label="个人履历："    panel="4"  pos="0.50, 0" />
+  <label  name="xhonor"        label="个人荣誉："    panel="4"  pos="5.50, 0" />
+  <textarea   name="resume"    label=""              panel="4"  pos="1.25, 0"  size="3.75,29"  maxlength="1000" hint="不超过1000字"/>
+  <textarea   name="honor"     label=""              panel="4"  pos="6.25, 0"  size="4.00,29"  maxlength="500"  hint="不超过500字"/>
+  <imageupload name='filename' label='照片名称：'    panel="5"  pos="0.25 ,0"  size="4.00,50"  filepath="photos//teacher"/>
+
+</service>
+

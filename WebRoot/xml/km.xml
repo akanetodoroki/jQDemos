@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TTreeGrid">
+  <title>科目分类</title>
+  <treegrid table="accounts" keyfield="accountid/资源分类编码" datafields="[16]accountid/资源类别编码;[30]accountname/资源类别名称;[30]englishname/英文名称" 
+   sql="select * from accounts" />
+  <page  title="ttt" size="9,74" />
+  <panel title="基本信息"   pos="0.25,1.25"  size="8.25,72"  page="1" labelwidth="9"/>
+
+  <keyfield   name="accountid"     label="科目编码："  panel="1"  pos="0.25, 0" size="0,21" maxlength="16" />
+  <textfield  name="accountname"   label="科目名称："  panel="1"  pos="1.25, 0" size="0,60" maxlength="80" />
+  <textfield  name="englishname"    label="英文名称："  panel="1"  pos="2.25, 0" size="0,60"  />
+  <textfield  name="alias"   	 label="科目别名："  panel="1"  pos="3.25, 0" size="0,60" />
+  <textfield  name="modifieddate"   	 label="修改日期："  panel="1"  pos="4.25, 0" size="0,12" />
+
+  <validation>accountid!="":科目编码为空</validation>
+  <validation>accountname!="":科目名称为空</validation>
+  <validation>accountid>="1" and accountid!>="A":科目编码必须是数字</validation>
+  <replace>modifieddate=getdate()</replace>
+</service>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TTreeGridItem">
+  <title>资源分类</title>
+  <tree table="resourcecategories" keyfield="categoryid" datafields="categoryid;categoryname"
+   sql="select CategoryID,CategoryName,Englishname,Cast(Description as varchar(1000)) as Description,ParentNodeID,IsparentFlag,Level from ResourceCategories" 
+   size="0,32"    
+  />
+  <grid table="resources"   keyfield="resourceid/资源编码" datafields="[12]resourceid/资源编码;[28]resourcename/资源名称;[25]categoryname/资源类别;categoryid;
+   courseid;[30]coursename/对应课程;[15]contributor/资源提供者;    [10]uploadday/上传日期;fileosname;filesourcename;filesize;[n10]filesizedesc/
+资源1大小;description" 
+   sql="select a.*,b.categoryname,c.coursename,convert(varchar(10),uploaddate,120) as uploadday from resources a join resourcecategories b 
+   on a.categoryid=b.categoryid join courses c on a.courseid=c.courseid"
+   filterfields="ResourceID/资源编码;ResourceName/资源名称;Categoryname/资源类别;Coursename/对应课程;Contributor/资源提供者;a.Description/资源描述" 
+ />
+  <page  title="资源信息"   size="10,72" />
+  <page  title="附件管理"   size="10,72" />
+  <panel title="基本信息"   pos="0.25,1.25"  size="9.25,70"  page="1" labelwidth="9"/>
+  <panel title="附件信息"   pos="0.25,1.25"  size="9.25,70"  page="2" labelwidth="9" />
+
+  <keyfield   name="resourceid"     label="资源编码："  panel="1"  pos="0.25, 0" size="0,21" maxlength="16" aliasfields="resourceid1"/>
+  <textfield  name="resourcename"   label="资源名称："  panel="1"  pos="1.25, 0" size="0,45" maxlength="80" aliasfields="resourcename1"/>
+  <textfield  name="categoryid"     label="资源类别："  panel="1"  pos="2.25, 0" size="0,16" readonly="true" />
+  <treefield  name="categoryname"   label=""            panel="1"  pos="2.25,26" size="8,27" table="resourcecategories" keyfield="categoryid"  datafields='categoryid;categoryname' derivedfields="categoryid"/>
+  <textfield  name="courseid"       label="对应课程："  panel="1"  pos="3.25, 0" size="0,16" readonly="true" />
+  <combobox   name="coursename"     label=""            panel="1"  pos="3.25,26" size="0,25" sql="select courseid,coursename,englishname from courses" table="courses" derivedfields="courseid" />
+  <textarea   name="description"    label="资源描述："  panel="1"  pos="4.25, 0" size="4,57.5" />
+
+  <labeltext   name="resourceid1"   label="资源编码："  panel="2"  pos="0.375,1.25" size="0,12.25"  />
+  <labeltext   name="resourcename1" label="资源名称："  panel="2"  pos="1.375,1.25" size="0,52.875" />
+  <fileupload  name="filename"      label="文件名称："  panel="2"  pos="2.375,0.00" size="0,57.25" filepath="resources"/>
+  <textfield   name="contributor"   label=""            value="#sysusername" visible="false" />
+  <textfield   name="uploaddate"    label=""            value="#sysdate"     visible="false" />
+  <validation>resourceid!=""</validation>
+  <validation>resourcename!=""</validation>
+</service>

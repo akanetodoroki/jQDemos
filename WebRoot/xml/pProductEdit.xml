@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type='TTreeForm' permissions="add;update;delete;print;filter">
+   <title>产品分类设计</title>
+   <table name="products" title="产品" keyfield="productid/产品编码"   />
+   <tree title="产品列表" pagesize="100" size="0,250" rowheight="20" align="left">
+      <sql>
+		select a.*,suppliername,case when unitprice>0 then str(unitprice,12,2) else '' end as price from products a 
+		left join suppliers b on a.supplierid=b.supplierid 
+      </sql>
+      <nodefields>
+        [140]productid/产品编码;[250]productname/产品名称
+      </nodefields>
+      <filterfields>
+        productid/产品编码;productname/产品名称;quantityperunit/规格型号;unit/计量单位;unitprice/产品单价;suppliername/供应商
+      </filterfields>
+   </tree>
+   <form title="产品详情" size="344,632" rowheight="32" modal="xwindow" >
+      <tab title="基本信息" >  
+         <groupbox title="基本信息" pos="8,12" size="295,600" >
+            <textfield name="productid" label="产品编码：" labelwidth="60" pos="10+32*0,6" size="0,170" length="14" blanktext="请输入产品编码" />
+            <textfield name="pycode" label="产品别名：" labelwidth="60" pos="10+32*0,355" size="0,220" length="20" />
+            <textfield name="productname" label="产品名称：" labelwidth="60" pos="10+32*1,6" size="0,320" length="100" blanktext="请输入产品名称" />
+            <textfield name="productshortname" label="产品简称：" labelwidth="60" pos="10+32*1,355" size="0,220" length="10" />
+            <textfield name="quantityperunit" label="规格型号：" labelwidth="60" pos="10+32*2,6" size="0,320" length="40" />
+            <textfield name="unit" label="计量单位：" labelwidth="60" pos="10+32*2,355" size="0,220" length="16" />
+            <decimalfield name="unitprice" label="产品单价：" labelwidth="60" pos="10+32*3,6" size="0,170" decimal="2" />
+            <decimalfield name="taxrate" label="增值税率%：" labelwidth="72" pos="10+32*3,343" size="0,150" decimal="2" maxvalue="100" minvalue="0" />
+            <textpicker name="supplierid" label="供 应 商：" labelwidth="60" pos="10+32*4,6" size="0,170" length="14" valuefields="suppliername" style="xeditable" >
+               <grid title="供应商" pagesize="10" size="387,660" sql="select supplierid,suppliername,address,contactname from suppliers" datafields="[95]supplierid/供应商编码;[240]suppliername/供应商名称;[270]address/供应商地址" />
+            </textpicker>
+            <readonlyfield name="suppliername" label="" labelwidth="0" pos="10+32*4,220" size="0,354" decimal="2" maxvalue="100" minvalue="0" />
+            <memofield name="notes" label="产品描述：" labelwidth="60" pos="10+32*5,6" size="94,568" length="500" />
+         </groupbox>
+      </tab>  
+      <tab>
+        <title>附件信息</title>
+         <groupbox title="上传图片" pos="8,12" size="295,600" >
+            <imageupload  name="filepath" label="附件名称：" filename="filename" labelwidth="60" pos="10+32*0,6" size="280,554" checkbox="true" />
+         </groupbox>
+      </tab>
+      <tab>
+          <title>状态信息</title>
+             <groupbox title="状态信息" pos="8,12" size="125,600" >
+                 <sysdate name="createdate" label="创建日期：" labelwidth="60" pos="10+32*0,16" size="0,180" value="default" />
+                 <sysuser name="creator" label="创 建 人：" labelwidth="60" pos="10+32*0,310" size="0,240" value="default" />
+                 <sysdate name="updatedate" label="修改日期：" labelwidth="60" pos="10+32*1,16" size="0,180" />
+                 <sysuser name="operator" label="修 改 人：" labelwidth="60" pos="10+32*1,310" size="0,240" />
+             </groupbox>
+      </tab>
+   </form>
+  <validation rule="productname!=''" title="产品名称不能为空" />
+  <validation rule="unitprice>=0" title="产品单价不能为负值" />
+  <replace>pycode=productid</replace>
+</service>

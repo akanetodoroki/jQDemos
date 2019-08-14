@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TGridCheckTree" permissions="add;update;delete;print;filter">
+   <title>用户权限管理</title>
+   <table name="sys_userright" title="用户权限"  />
+   <grid title="用户列表" table="sys_user" datafields="[120]account/用户账号;[140]username/用户名称;[80]xtype/用户类型;[120]email/Email" 
+   keyfield="account/用户账号" valuefields="notes" pagesize="20" size="250,400" 
+   align="top" />
+   <tree title="用户权限" table="sys_menu" nodefields="menuid/菜单编码;menutitle/菜单名称" keyfield="menuid/菜单编码" pagesize="0" >
+      <sql>
+         select * from sys_menu
+      </sql>
+      <filterfields>
+        account/用户账号;username/员工名称;email/电子邮件
+      </filterfields>
+   </tree>
+   <form title="用户详情" size="250,380" rowheight="32" modal="window">
+      <tab title="用户信息">
+      <groupbox title="基本信息" pos="12,10" size="200,325" labelwidth="60" >
+         <textfield  name="account" label="用户账号：" labelwidth="60" pos="10,6" size="0,290" length="16" hint="请输入员工编码" />
+         <textfield  name="username" label="用户名称：" labelwidth="60" pos="10+34*1,6" size="0,290" length="30" hint="请输入员工姓名" />
+         <textfield  name="pwd" label="登录密码：" labelwidth="60" pos="10+34*2,6" size="0,290" length="30" />
+         <textfield  name="pwd1" label="密码确认：" labelwidth="60" pos="10+34*3,6" size="0,290" length="18" />
+         <textfield  name="email" label="电子邮件：" labelwidth="60" pos="10+34*4,6" size="0,290" />
+     </groupbox>
+     <groupbox title="上传照片" pos="225,10" size="325,325" >
+        <imageupload  name="filepath" label="附件名称：" filename="filename" labelwidth="60" pos="10,6" size="10,290" />
+     </groupbox>
+     </tab>
+  </form>
+  <validation rule="pwd==pwd1" title="用户密码不一致" />
+  <validation rule="account!=''" title="用户名称不能为空" />
+  <validation rule="username!=''" title="用户名称不能为空" />
+</service>

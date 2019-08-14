@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type='TReport' permissions="print;export;filter">
+   <title>产品销售月报表</title>
+   <grid pagesize="20" keyfield="productid" titlefont="楷体_gb2312" >
+	   <datafields>
+		[50]sysrowno/序号;[100]productid/产品编码;[240]productname/产品名称;[220]quantityperunit/规格型号;[100]unit/计量单位;[#n10,2][80]unitprice/单价;[#n7][65]qty/本月销售|销售量;[#n12,2][80]amt/本月销售|销售额;[#n10,2][80]salesprice/本月销售|平均单价;[#n7][65]ytdqty/本年累计销售|销售量;[#n12,2][80]ytdamt/本年累计销售|销售额;[#n10,2][80]ytdsalesprice/本年累计销售|平均单价
+      </datafields>
+	   <filterfields>
+	     productid/产品编码;productname/产品名称;quantityperunit/规格型号
+	   </filterfields>
+      <sql>
+        select * from dbo.rpt_productsales(#sysdate) 
+      </sql>
+     <sortfield>sortflag</sortfield>
+      <summaryfields name="productname" label="[@c]* 合   计 *" sumfields="amt;ytdamt" style="grandtotal" />
+   </grid>
+   <report>
+ 	 <template name="TReportofProductSales.xls" type="excel" filename="产品销售月报表.xls" titlerows="4" />
+     <sysdate pos="2,1" format="yyyy年mm月dd日" />
+     <sysuser pos="3,1" />
+     <label pos="3,2" text="中国" />
+     <sortfield>sortflag</sortfield>
+     <footer>
+    	<syspageno align="center" format="第pageno页共pagecount页*" />
+    	<label align="left" text="浙江理工大学" />
+    	<textfield align="right" name="productname" />
+     </footer>	
+   </report>
+    <form title="产品详情" size="344,632" rowheight="32" modal="xwindow" >
+         <groupbox title="基本信息" pos="8,12" size="295,600" >
+            <textfield name="productid" label="产品编码：" labelwidth="60" pos="10+32*0,6" size="0,170" length="14" blanktext="请输入产品编码" />
+            <textfield name="pycode" label="产品别名：" labelwidth="60" pos="10+32*0,355" size="0,220" length="20" />
+            <textfield name="productname" label="产品名称：" labelwidth="60" pos="10+32*1,6" size="0,320" length="100" blanktext="请输入产品名称" />
+            <textfield name="productshortname" label="产品简称：" labelwidth="60" pos="10+32*1,355" size="0,220" length="10" />
+            <textfield name="quantityperunit" label="规格型号：" labelwidth="60" pos="10+32*2,6" size="0,320" length="40" />
+            <textfield name="unit" label="计量单位：" labelwidth="60" pos="10+32*2,355" size="0,220" length="16" />
+            <decimalfield name="unitprice" label="产品单价：" labelwidth="60" pos="10+32*3,6" size="0,170" decimal="2" />
+            <decimalfield name="taxrate" label="增值税率%：" labelwidth="72" pos="10+32*3,343" size="0,150" decimal="2" maxvalue="100" minvalue="0" />
+            <readonlyfield name="suppliername" label="" labelwidth="0" pos="10+32*4,220" size="0,354" decimal="2" maxvalue="100" minvalue="0" />
+            <memofield name="notes" label="产品描述：" labelwidth="60" pos="10+32*5,6" size="94,568" length="500" />
+         </groupbox>
+   </form>
+</service>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TListForm" permissions="add;update;delete;print;filter">
+   <title>员工编辑</title>
+   <table name="employees" title="员工" keyfield="employeeid/员工编码"   />
+   <list title="员工列表" nodefields="[160]employeeidname/员工编码" pagesize="10" size="0,180" align="left" />
+   <form title="员工详情" size="300,560" rowheight="32" modal="xwindow">
+       <sql>
+		select a.*,a.employeeid+' '+employeename as employeeidname,
+		c.areaname as province,d.areaname as city from employees a 
+		left join areas c on a.provinceid=c.areaid
+		left join areas d on a.cityid=d.areaid
+      </sql>
+      <filterfields>
+        employeeid/员工编码;employeename/员工名称;address/员工地址;mobile/移动电话;qq/QQ号码;email/电子邮件
+      </filterfields>
+      <tab title="基础信息" >  
+         <groupbox title="基本信息" pos="06,10" size="226,522" labelwidth="60" >
+            <textfield  name="employeeid" label="员工编码：" labelwidth="60" pos="6,6" size="0,210" length="16" hint="请输入员工编码" />
+            <textfield  name="employeename" label="员工名称：" labelwidth="60" pos="6,275" size="0,220" length="30" hint="请输入员工姓名" />
+            <textfield  name="pycode" label="汉语拼音：" labelwidth="60" pos="6+32*1,6" size="0,210" length="30" />
+            <textfield  name="idnumber" label="身份证号：" labelwidth="60" pos="6+32*1,275" size="0,220" length="18" />
+            <datefield  name="birthdate" label="出生日期：" labelwidth="60" pos="6+33*2,6" size="0,210" />
+            <combo  name="gender" label="性  别：" labelwidth="60" pos="6+33*2,275" size="0,125" items="男;女" value="男" />
+            <combo  name="province" label="所在籍贯：" labelwidth="60" pos="6+33*3,6" size="0,210" sql="select areaid as provinceid,areaname as province from areas where level=1" valuefields="provinceid" />
+            <combo  name="city" label="" labelwidth="0" pos="6+33*3,275" size="0,220" sql="select areaid as cityid,areaname as city,parentnodeid as provinceid from areas where level=2" valuefields="cityid" masterfield="provinceid" />
+            <textfield  name="address" label="详细地址：" labelwidth="60" pos="6+33*4,6" size="0,489" length="80" />
+            <textfield  name="zip" label="邮政编码：" labelwidth="60" pos="6+33*5,6" size="0,175" length="10" />
+        </groupbox>
+        <groupbox title="通讯信息" pos="244,10" size="225,522" labelwidth="60" >
+            <combo  name="department" label="所属部门：" labelwidth="60" pos="6+33*0,6" size="0,215" sql="select description as department from dictionary where type='所属部门'"  />
+            <combo  name="title" label="主要职务：" labelwidth="60" pos="6+33*0,275" size="0,220" sql="select description as department from dictionary where type='职务'"  />
+            <textfield  name="officephone" label="办公电话：" labelwidth="60" pos="6+33*1,6" size="0,215" length="24" />
+            <textfield  name="homephonep" label="家庭电话：" labelwidth="60" pos="6+33*1,275" size="0,220" length="24" />
+            <textfield  name="mobile" label="移动电话：" labelwidth="60" pos="6+33*2,6" size="0,215" length="24" />
+            <textfield  name="fax" label="传真号码：" labelwidth="60" pos="6+33*2,275" size="0,220" length="24" />
+            <textfield  name="email" label="电子邮件：" labelwidth="60" pos="6+33*3,6" size="0,215" length="50" />
+            <textfield  name="qq" label="QQ号码：" labelwidth="60" pos="6+33*3,275" size="0,220" length="20" />
+            <textfield  name="homepage" label="个人主页：" labelwidth="60" pos="6+33*4,6" size="0,489" length="255" />
+            <textfield  name="expertise" label="个人特长：" labelwidth="60" pos="6+33*5,6" size="0,489" length="255" />
+         </groupbox>
+      </tab>  
+      <tab title="附件信息" >    
+         <groupbox title="上传照片" pos="6,10" size="250,522" >
+            <imageupload  name="filepath" label="附件名称：" filename="filename" labelwidth="60" pos="10+32*0,6" size="10,489" />
+         </groupbox>
+         <groupbox title="状态信息" pos="266,10" size="95,522">
+           <sysdate name="createdate" label="创建日期：" labelwidth="60" pos="10+32*0,10" size="0,210" value="default" />
+           <sysuser name="creator" label="创 建 人：" labelwidth="60" pos="10+32*0,275" size="0,220" value="default" />
+           <sysdate name="updatedate" label="修改日期：" labelwidth="60" pos="10+32*1,10" size="0,210" />
+           <sysuser name="operator" label="修 改 人：" labelwidth="60" pos="10+32*1,275" size="0,220" />
+        </groupbox>
+      </tab>
+   </form>
+  <validation rule="employeename!=''" title="员工名称不能为空" />
+</service>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TDocument" permissions="review;print;filter">
+   <title>订单编辑</title>
+   <table name="orders" title="订单" keyfield="orderid/订单编码" documentdate="orderdate" reviewfields="reviewer" />
+   <tree title="订单分组" size="0,200" nodefields="orderdate/订单日期;province+customername/客户名称;employeename/员工姓名" />
+   <grid title="订单列表" size="600,0" pagesize="20" style="multi" lockedfields="orderid">
+      <sql>
+		select a.*,e.customername,b.contactname,c.Employeename,e.address,f.areaname as province,
+		convert(varchar(10),orderdate,120) as 'orderday',case when a.filepath!='' then 1 else 0 end as filepathflag from orders a 
+		left join contacts b on a.customerid=b.customerid and a.contactid=b.contactid
+		left join employees c on a.employeeid=c.employeeid
+		left join customers e on a.customerid=e.customerid
+		left join areas f on f.areaid=e.provinceid
+      </sql>
+      <datafields>
+		[50]sysrowno/序号;[120]orderid/订单编号;[@c][80]orderdate/订单日期;[@c][80]requireddate/要货日期;[100]customerid/客户编码;[275]customername/客户名称;[120]invoiceid/发票号;[@c][75]invoicedate/开票日期;[@c][80]shippeddate/发货日期;[@r][105]amount/订单金额;[@c][120]employeename/业务员;[@c][105]reviewer/审核人
+      </datafields>
+   </grid>
+   <form title="订单详情" size="310,580" rowheight="32" modal="xwindow">
+      <tab title="基本信息" >  
+         <groupbox title="基本信息" pos="6,12" size="260,548" labelwidth="60" >    
+            <sysnumber name="sysid" label="电脑序号：" labelwidth="60" pos="6,6" size="0,216" length="20" format="Ayyyymm###" />
+            <textfield name="orderid" label="订单编号：" labelwidth="60" pos="6,334" size="0,190" length="20" format="Ayyyymm####T" blanktext="请输入订单编号" />
+		    <datefield name="orderdate" label="订单日期：" labelwidth="60" pos="6+33*1,334" size="0,190" />
+		    <textpicker name="customerid" label="客户编码：" labelwidth="60" pos="6+33*1,6" size="0,190" length="14" valuefields="customername" style="editable" >
+        	     <grid title="客户" pagesize="15" size="387,660" sql="select customerid,customername,address from customers" datafields="[95]customerid/客户编码;[240]customername/客户名称;[270]address/供应商地址" />
+	        </textpicker>
+		    <readonlyfield name="customername" label="客户名称：" labelwidth="60" pos="6+33*2,6" size="0,518" />
+            <combo name="contactname" label="联系人：" labelwidth="60" pos="6+33*3,6" size="0,240" sql="select contactid,contactname from contacts" valuefields="contactid" />
+		    <datefield name="requireddate" label="要货日期：" labelwidth="60" pos="6+33*3,334" size="0,190" />
+		    <textfield name="invoiceid" label="发票编号：" labelwidth="60" pos="6+33*4,6" size="0,240" length="20" />
+		    <datefield name="invoicedate" label="发票日期：" labelwidth="60" pos="6+33*4,334" size="0,190" />
+		    <textfield name="contractid" label="合同编号：" labelwidth="60" pos="6+33*5,6" size="0,240" length="20" />
+		    <datefield name="accountrequireddate" label="付款日期：" labelwidth="60" pos="6+33*5,334" size="0,190" />
+            <combo name="employeename" label="主管员工：" labelwidth="60" pos="6+33*6,6" size="0,240" sql="select employeeid,employeename from employees" valuefields="employeeid" />
+		    <datefield name="shippeddate" label="发货日期：" labelwidth="60" pos="6+33*6,334" size="0,190" />
+         </groupbox>
+      </tab>  
+      <tab title="附件信息" >
+         <groupbox title="订单描述" pos="10,12" size="128,548" >
+            <memofield name="notes" label="" labelwidth="60" pos="10,6" size="90,516" />
+         </groupbox>
+         <groupbox title="上传附件" pos="140,12" size="125,548" >
+            <fileupload  name="filepath" label="附件名称：" filename="filename" labelwidth="60" pos="10+32*0,6" size="10,516" />
+         </groupbox>
+      </tab>
+      <tab>
+          <title>状态信息</title>
+           <sysdate name="createdate" label="创建日期：" labelwidth="60" pos="16+32*0,20" size="0,180" value="default" />
+           <sysuser name="creator" label="创 建 人：" labelwidth="60" pos="16+32*0,290" size="0,240" value="default" />
+           <sysdate name="updatedate" label="修改日期：" labelwidth="60" pos="16+32*1,20" size="0,180" />
+           <sysuser name="operator" label="修 改 人：" labelwidth="60" pos="16+32*1,290" size="0,240" />
+           <sysdate name="reviewdate" label="审核日期：" labelwidth="60" pos="16+32*2,20" size="0,180" />
+           <sysuser name="reviewer" label="审 核 人：" labelwidth="60" pos="16+32*2,290" size="0,240" />
+      </tab>
+   </form>
+   <detailgrid size="250,0" title="订单明细" table="orderitems" pagesize="5" keyfield="productid" sortfield="productid" masterfield="orderid" xlockedfields="" style="editable"> 
+      <sql>select a.*,b.productname,b.quantityperunit,b.unit from orderitems a 
+        left join products b on a.productid=b.productid 
+      </sql>
+      <datafields>
+		[45]sysrowno/序号;[#s14][120]productid/产品编码;[200]productname/产品名称;[150]quantityperunit/规格型号;[80]unit/计量单位;[#n7]quantity/数量;[#n10,2]unitprice/单价;[#n6,2][70]discount/折扣率%;[#n12,2][100]amount/金额
+      </datafields>
+      <totalfields name="productname" label="[@c]* 合   计 *" sumfields="amount;quantity" avgfields="unitprice" maxfields="discount" style="grandtotal" />
+      <rmb name="amount" label="人民币合计（大写）：" />
+      <textpicker name="productid" label="产品编码：" labelwidth="60" pos="6+33*1,6" size="0,180" length="14" valuefields="productname;quantityperunit;unit"  >
+          <grid title="产品" pagesize="15" size="387,660" sql="select productid,productname,quantityperunit,unit,isparentflag from products" datafields="[#s10][100]productid/产品编码;[200]productname/产品名称;[160]quantityperunit/规格型号;[100]unit/计量单位" />
+	  </textpicker>
+      <validation rule="amount!=0" title="销售金额不能为零" />
+      <validation rule="discount>=0 and discount!>100" title="折扣率超出范围" />
+	  <replace>amount=quantity*unitprice*discount/100</replace>
+   </detailgrid>
+  <validation rule="orderid!=''" title="订单编码不能为空" />
+  <validation rule="customerid!=''" title="客户编码不能为空" />
+  <replace>reviewdate=''?reviewer==''</replace>
+</service>

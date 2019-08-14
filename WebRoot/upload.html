@@ -1,0 +1,56 @@
+﻿<html>
+<head>
+<title> 
+上传文件
+</title>
+    <script type="text/javascript" src="jqeasyui/jquery.min.js"></script>
+    <script type="text/javascript" src="jqeasyui/ajaxfileupload.js"></script>
+
+</head>
+<body>
+<form name="uploadfile" id="uploadfile" method="POST" enctype="multipart/form-data">
+<table bgcolor="#f3f3f8" height="300" width="500">
+    <tr>
+      <td align="center" height="300" valign="middle">
+        <input type="file" name="upFile" id="upFile"  size="40"/>
+        <input type="button" name="upload1" id="upload1" value="提交" onclick="upFiles();" />
+       </td>
+    </tr>
+</table>
+</form>
+<script language="javascript">
+function upFiles(){
+	var file = document.getElementById("upFile").value;
+	$.ajaxFileUpload({
+		url:'system//jqx_fileUpLoad.jsp',  //system路径可以不加
+		secureuri:false,
+		fileElementId:'upFile',
+		//dataType: 'json',
+		type: 'post',
+		data:{
+			filename: file,
+			filepath: 'mybase',  //服务器路径，可以设置为空
+			targetname: 'aa'  //目标文件名称,文件后缀根据源文件自动加，也可以为空
+		},
+		success: function (data, status){
+			//后台返回JSON格式的字符串,具体返回数据根据实际需要，如：{sucess:true,msg:'上传成功',filePath:'uploads/xxxx.jpg',id:'1111'}
+			if(typeof(data.sucess) != 'undefined'){
+				if(data.sucess){
+					alert("上传成功");
+					//下面可以进行些操作
+				}else{
+					alert("上传失败");
+				}
+			}
+		},
+		error: function (data, status, e){
+			alert(e);
+		}
+	 });
+		
+	return false;
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type='TTreeForm' permissions="add;update;delete;print;filter">
+   <title>指标分类设计</title>
+   <table name="categories" title="指标" keyfield="categoryid/指标编码"   />
+   <tree title="指标列表" pagesize="100" size="400,0" rowheight="20" align="top">
+      <sql>
+		select * from categories 
+      </sql>
+      <datafields>
+        [190]categoryid/指标编码;[450]categoryname/指标名称
+      </datafields>
+      <filterfields>
+        categoryid/指标编码;categoryname/指标名称
+      </filterfields>
+   </tree>
+
+   <grid title="指标列表" table="categories" keyfield="categoryid/指标编码" size="600,0" pagesize="20" style="single" lockedfields="categoryid">
+      <sql>
+        select * from categories
+      </sql>
+      <datafields>
+        [50]sysrowno/序号;[80]categoryid/指标编码;[200]categoryname/指标名称
+      </datafields>
+   </grid>
+
+   <form title="指标信息" size="244,632" align="bottom" rowheight="32" modal="xwindow" >
+      <tab title="指标设置" >  
+         <groupbox title="" pos="8,12" size="225,560" >
+            <textfield name="categoryid" label="指标编码：" labelwidth="60" pos="10+36*0,6" size="0,180" length="15" blanktext="请输入指标编码" />
+            <textfield name="categoryname" label="指标名称：" labelwidth="60" pos="10+36*1,6" size="0,522" length="100" blanktext="请输入指标名称" />
+            <combo name="type" label="指标类别：" labelwidth="60" pos="10+36*2,6" size="0,180" items="年度;季度;月度"/>
+            <datefield name="xdate1" label="样本区间：" labelwidth="60" pos="10+36*2,206" size="0,180" decimal="0" />
+            <datefield name="xdate2" label="~" labelwidth="12" pos="10+36*2,395" size="0,132" decimal="0" />
+            <memofield  name="notes" label="备注信息：" labelwidth="60" pos="10+36*3,6" size="90,522" />
+
+         </groupbox>
+      </tab>  
+   </form>
+  <validation rule="categoryname!=''" title="指标名称不能为空" />
+</service>

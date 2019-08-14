@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TListGrid" permissions="add;update;delete;print;filter">
+   <title>选项编辑</title>
+   <table name="dictionary" title="选项字典" keyfield="sysid/编码"   />
+   <list title="选项类别" table="dictionary" nodefields="[@c][170]type/选项类别" pagesize="10" keyfield="type/选项类别" size="0,200" align="left" >
+      <form title="类别详情" size="50,480" >
+         <textfield  name="type" label="选项类别：" labelwidth="60" pos="14,16" size="0,450" length="50" hint="请输入选项类别" />
+      </form>
+   </list>
+   <grid title="选项条目" table="dictionary" datafields="[#s80][220]description/选项名称;[#s][140]pycode/助记码;[#s][300]notes/选项描述" pagesize="25" keyfield='sysid' sortfield='description' style="editable" >
+       <sql>
+	   select * from dictionary
+      </sql>
+      <filterfields>
+        description/选项名称;pycode/助记码
+      </filterfields>
+      <validation rule="description!=''" title="选项名称不能为空" />
+   </grid>
+   <grid table="dictionary" title="选项明细2" datafields="[#s80][180]description/选项名称;[#s][140]pycode/助记码;[#s][300]notes/选项描述" pagesize="25" keyfield='sysid' sortfield='description' style="editable" >
+       <sql>
+	   select * from dictionary
+      </sql>
+      <filterfields>
+        description/选项名称;pycode/助记码;notes/选项描述
+      </filterfields>
+      <validation rule="description!=''" title="选项名称不能为空" />
+   </grid>
+</service>

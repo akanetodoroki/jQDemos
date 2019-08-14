@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TListGrid" permissions="add;update;delete;print;filter">
+   <title>选项编辑</title>
+   <table documentdate="orderdate" />
+   <list title="选项类别" table="orders" nodefields="[@c][75]orderid/订单编码;[75]orderdate/订单日期;[100]customerid/客户编码" pagesize="0" keyfield="orderid/订单编码" size="0,200" align="left" >
+      <form title="类别详情" size="120,480" >
+         <textfield  name="orderid" label="订单编码：" labelwidth="60" pos="14,16" size="0,250" length="14" hint="请输入订单编码" />
+         <datefield  name="orderdate" label="订单日期：" labelwidth="60" pos="14+32,16" size="0,250" length="10" hint="" />
+         <textfield  name="customerid" label="客户编码：" labelwidth="60" pos="14+32*2,16" size="0,250" length="14" />
+      </form>
+      <validation rule="orderid!=''" title="订单编码不能为空" />
+      <validation rule="customerid!=''" title="客户编码不能为空" />
+   </list>
+   <grid title="订单明细" table="orderitems" datafields="[#s12][160]productid/产品编码;[#s40]productname/产品名称;[#n8]quantity/数量;[#n10,2]unitprice/单价;[#n12,2]amount/金额" pagesize="25" keyfield='productid' style="editable" >
+       <sql>
+	   select a.*,b.productname from orderitems a join products b on a.productid=b.productid
+      </sql>
+      <filterfields>
+        [#s12][160]productid/产品编码;[#s40]productname/产品名称
+      </filterfields>
+      <validation rule="productid!=''" title="产品编码不能为空" />
+   </grid>
+</service>

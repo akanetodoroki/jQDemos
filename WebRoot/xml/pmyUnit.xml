@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<service type="TForm" permissions="update;print">
+   <title>单位信息维护</title>
+   <table name="sys_myunit" title="单位" keyfield="customerid/单位编码"   />
+   <form title="单位详情" size="300,610" rowheight="32" modal="xwindow">
+       <sql>
+           select a.*,b.title,contactname,c.areaname as province,d.areaname as city,c.areaname+' '+d.areaname as provincecity,employeename from sys_myunit a 
+    	   left join contacts b on a.customerid=b.customerid and a.contactid=b.contactid
+	       left join areas c on a.provinceid=c.areaid
+	       left join areas d on a.cityid=d.areaid
+	       left join employees e on a.employeeid=e.employeeid
+      </sql>
+      <filterfields>
+        customerid/单位编码;customername/单位名称;address/单位地址;province/所在省份;city/所在城市;contactname/主联系人;
+      </filterfields>
+      <tab title="基础信息" >  
+         <groupbox title="基本信息" pos="06,10" size="248,577" labelwidth="60" >    
+            <textfield  name="customerid" label="单位编码：" labelwidth="60" pos="6,6" size="0,190" length="16" hint="请输入单位编码" />
+            <textfield  name="pycode" label="助记码：" labelwidth="60" pos="6,295" size="0,255" length="40" />
+            <textfield  name="customername" label="单位名称：" labelwidth="60" pos="6+32*1,6" size="0,544" length="80" hint="请输入单位名称" />
+            <combo  name="province" label="所属省份：" labelwidth="60" pos="6+32*2,6" size="0,250" sql="select areaid as provinceid,areaname as province from areas where level=1" valuefields="provinceid" />
+            <combo  name="city" label="所在城市：" labelwidth="60" pos="6+32*2,295" size="0,250" sql="select areaid as cityid,areaname as city,parentnodeid as provinceid from areas where level=2" valuefields="cityid" masterfield="provinceid" />
+            <textfield  name="address" label="详细地址：" labelwidth="60" pos="6+32*3,6" size="0,544" length="100" />
+            <textfield  name="zip" label="邮政编码：" labelwidth="60" pos="6+32*4,6" size="0,190" length="10" />
+            <textfield  name="phone" label="联系电话：" labelwidth="60" pos="6+32*4,295" size="0,255" length="24" />
+            <textfield  name="fax" label="传真号码：" labelwidth="60" pos="6+32*5,6" size="0,250" length="24" />
+            <textfield  name="email" label="电子邮件：" labelwidth="60" pos="6+32*5,295" size="0,255" length="50" />
+            <combo name="employeename" label="主管员工：" labelwidth="60" pos="6+32*6,6" size="0,250" sql="select employeeid,employeename from employees" valuefields="employeeid" />
+            <textfield  name="homepage" label="网站主页：" labelwidth="60" pos="6+32*6,295" size="0,255" length="50" />
+         </groupbox>
+      </tab>  
+      <tab title="辅助信息" >
+         <groupbox title="辅助信息" pos="06,10" size="248,577" >    
+            <combo  name="industry" label="所属行业：" labelwidth="60" pos="6+32*0,6" size="0,250" sql="select description as industry from dictionary where  type='所属行业'" />
+            <combo  name="type" label="单位类别：" labelwidth="60" pos="6+32*0,300" size="0,250" sql="select description as type from dictionary where type='单位类别'" />
+            <combo  name="source" label="单位来源：" labelwidth="60" pos="6+32*1,6" size="0,250" sql="select description as source from dictionary where type='单位来源'" />
+            <combo  name="status" label="单位状态：" labelwidth="60" pos="6+32*1,300" size="0,250" sql="select description as status from dictionary where type='单位状态'" />
+            <numberfield  name="revenue" label="年销售额：" labelwidth="60" pos="6+32*2,6" size="0,150" decimal="2" length="10" minvalue="0" />
+            <label name="revenuex" label="(万元)" pos="6+32*2+3,166" size="0,60" />
+            <numberfield  name="employees" label="员工人数：" labelwidth="60" pos="6+32*2,300" size="0,140" decimal="0" length="6" minvalue="0" />
+            <textfield  name="owner" label="法人代表：" labelwidth="60" pos="6+32*3,6" size="0,250" length="40" />
+            <textfield  name="stockno" label="股票代码：" labelwidth="60" pos="6+32*3,300" size="0,140" length="10" />
+            <memofield  name="notes" label="备注信息：" labelwidth="60" pos="6+32*4,6" size="85,544" length="500" />
+         </groupbox>
+      </tab>
+      <tab title="财务信息" >    
+         <groupbox  title="开户银行" tab="3" pos="6,10" size="58,577" >    
+            <textfield  name="bank" label="开户银行：" labelwidth="60" pos="6,6" size="0,250" length="50" />
+            <textfield  name="bankaccountno" label="银行账号：" labelwidth="60" pos="6,300" size="0,250" length="30" />
+         </groupbox>
+         <groupbox  title="开票信息" tab="3" pos="75,10" size="158,577" >    
+            <textfield  name="vatinvoicetitle" label="开票名称：" labelwidth="60" pos="10+32*0,6" size="0,544" length="80" />
+            <textfield  name="taxno" label="纳税人号：" labelwidth="60" pos="10+32*1,6" size="0,250" length="30" />
+            <textfield  name="vataccountphone" label="开户电话：" labelwidth="60" pos="10+32*1,300" size="0,250" length="30" />
+            <textfield  name="vataccountaddress" label="开户地址：" labelwidth="60" pos="10+32*2,6" size="0,544" length="80" />
+            <textfield  name="vatbank" label="开户银行：" labelwidth="60" pos="10+32*3,6" size="0,250" length="40" />
+            <textfield  name="vatbankaccountno" label="银行账号：" labelwidth="60" pos="10+32*3,300" size="0,250" length="40" />
+         </groupbox>
+      </tab>
+      <tab>
+        <title>附件信息</title>
+         <groupbox title="上传附件" pos="6,10" size="125,577" >
+            <fileupload  name="filepath" label="附件名称：" filename="filename" labelwidth="60" pos="10+32*0,6" size="10,544" />
+         </groupbox>
+      </tab>
+      <tab>
+          <title>状态信息</title>
+           <sysdate name="createdate" label="创建日期：" labelwidth="60" pos="10+32*0,16" size="0,180" value="default" />
+           <sysuser name="creator" label="创 建 人：" labelwidth="60" pos="10+32*0,310" size="0,240" value="default" />
+           <sysdate name="updatedate" label="修改日期：" labelwidth="60" pos="10+32*1,16" size="0,180" />
+           <sysuser name="operator" label="修 改 人：" labelwidth="60" pos="10+32*1,310" size="0,240" />
+      </tab>
+   </form>
+  <validation rule="customername!=''" title="单位名称不能为空" />
+  <validation rule="employees>=0" title="员工人数不能为负值" />
+  <replace>pycode=customerid</replace>
+  <replace>address=province+' '+city+' '+zip.substring(1,5)</replace>
+</service>
