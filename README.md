@@ -1,6 +1,8 @@
 # jQDemos
 公司员工登录公司信息管理系统进行管理操作
 
+数据连接sqlserver数据库，框架和库jquery和easyui
+
 登录界面：
 
 ![image](https://github.com/akanetodoroki/jQDemos/blob/master/images/1.png)
